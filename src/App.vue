@@ -4,7 +4,7 @@
     <h1>STM API Messages</h1>
     <div v-if="messages.length === 0">Loading...</div>
     <ul v-else>
-      <li v-for="(message, index) in messages" :key="index">
+      <li v-for="(message, index) in messages" :key="messages">
         {{ message }}
       </li>
     </ul>
