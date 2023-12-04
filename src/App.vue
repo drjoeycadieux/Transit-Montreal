@@ -29,12 +29,12 @@ export default {
         const apiKey = "l769611a1ecd5547a5b6be663d03f3799b";
 
         const response = await axios.get(
-          "https://api.stm.info/pub/od/gtfs-rt/ic/v2/messages/etatservice",
+          "https://api.stm.info/pub/od/i3/v2/messages/etatservice",
           {
             headers: {
-              Accept: "application/json",
-              apiKey: l769611a1ecd5547a5b6be663d03f3799b,
+              apiKey: apiKey,
             },
+            mode: "cors",
           },
         );
 
@@ -45,6 +45,9 @@ export default {
         this.messages = response.data.messages || [];
       } catch (error) {
         console.error("Error fetching messages:", error);
+
+        // Log the error response to the console for debugging
+        console.log("Error Response:", error.response);
       }
     },
   },
