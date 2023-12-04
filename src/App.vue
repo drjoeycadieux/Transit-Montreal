@@ -18,7 +18,7 @@ export default {
   data() {
     return {
       error: null,
-      gtfsData: null,
+      position: null,
     };
   },
   mounted() {
@@ -27,12 +27,12 @@ export default {
   methods: {
     fetchData() {
       const apiKey = "l7130aafef7c6e481e9aa9fc1c412dd5c9"; // Replace with your actual API key
-      const apiUrl = `https://api.stm.info/pub/od/gtfs-rt/ic/v2?key=${apiKey}`;
+      const apiUrl = `https://api.stm.info/pub/od/gtfs-rt/ic/v2/vehiclePositions`;
 
       axios
         .get(apiUrl, { withCredentials: false })
         .then((response) => {
-          this.gtfsData = response.data;
+          this.position = response.data;
 
           // Initialize Mapbox
           mapboxgl.accessToken =
@@ -53,8 +53,8 @@ export default {
     },
     addMarkers(map) {
       // Example: Add a marker for each vehicle in the GTFS-RT data
-      if (this.gtfsData) {
-        this.gtfsData.entities.forEach((vehicle) => {
+      if (this.position) {
+        this.vehicle.entities.forEach((vehicle) => {
           const coordinates = [vehicle.longitude, vehicle.latitude];
           new mapboxgl.Marker().setLngLat(coordinates).addTo(map);
         });
