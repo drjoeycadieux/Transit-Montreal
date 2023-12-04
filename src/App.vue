@@ -1,76 +1,77 @@
+<!-- App.vue -->
 <template>
-  <div class="header">
-    <p>Transit Montreal</p>
-  </div>
-  <div>
-    <div v-if="error" class="error">{{ error }}</div>
-    <div v-else>
-      <div ref="map" class="map"></div>
-    </div>
+  <div id="app">
+    <h1>STM API Messages</h1>
+    <div v-if="messages.length === 0">Loading...</div>
+    <ul v-else>
+      <li v-for="(message, index) in messages" :key="index">
+        {{ message }}
+      </li>
+    </ul>
   </div>
 </template>
 
 <script>
 import axios from "axios";
-import mapboxgl from "mapbox-gl";
 
 export default {
   data() {
     return {
-      error: null,
-      gtfsData: null,
+      messages: [],
     };
   },
-  mounted() {
-    this.fetchData();
-  },
+  // ...
+
   methods: {
-    fetchData() {
-      const apiKey = "l7130aafef7c6e481e9aa9fc1c412dd5c9"; // Replace with your actual API key
-      const apiUrl = `https://api.stm.info/pub/od/gtfs-rt/ic/v2?key=${apiKey}`;
+    async fetchMessages() {
+      try {
+        // Replace 'YOUR_API_KEY' with your actual API key
+        const apiKey = "l769611a1ecd5547a5b6be663d03f3799b";
 
-      axios
-        .get(apiUrl, { withCredentials: false })
-        .then((response) => {
-          this.gtfsData = response.data;
+        const response = await axios.get(
+          "https://api.stm.info/pub/od/gtfs-rt/ic/v2/messages/etatservice",
+          {
+            headers: {
+              Accept: "application/json",
+              apiKey: l769611a1ecd5547a5b6be663d03f3799b,
+            },
+          },
+        );
 
-          // Initialize Mapbox
-          mapboxgl.accessToken =
-            "pk.eyJ1Ijoiam9leWNyZWF0b3IiLCJhIjoiY2xwbGR4bmNqMDNmcDJqcGV1OXY4Z2hteiJ9.yMegQFr9KWFFEsgmdbFRyg";
-          const map = new mapboxgl.Map({
-            container: this.$refs.map,
-            style: "mapbox://styles/mapbox/dark-v10",
-            center: [-73.5673, 45.5017], // Montreal coordinates (adjust as needed)
-            zoom: 12,
-          });
+        // Log the entire response to the console for debugging
+        console.log("API Response:", response);
 
-          // Use GTFS-RT data to add markers, layers, etc., on the map
-          this.addMarkers(map);
-        })
-        .catch((error) => {
-          this.error = `Error fetching data: ${error.message}`;
-        });
-    },
-    addMarkers(map) {
-      // Example: Add a marker for each vehicle in the GTFS-RT data
-      if (this.gtfsData) {
-        this.gtfsData.entities.forEach((vehicle) => {
-          const coordinates = [vehicle.longitude, vehicle.latitude];
-          new mapboxgl.Marker().setLngLat(coordinates).addTo(map);
-        });
+        // Assuming the API response contains an array of messages
+        this.messages = response.data.messages || [];
+      } catch (error) {
+        console.error("Error fetching messages:", error);
       }
     },
   },
+
+  // ...
 };
 </script>
 
 <style>
-#map {
-  width: 100%;
-  height: 100%;
-  position: absolute;
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  text-align: center;
+  color: #2c3e50;
+  margin-top: 60px;
 }
-.error {
-  color: red;
+
+h1 {
+  font-size: 2em;
+  margin-bottom: 20px;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  margin: 10px 0;
 }
 </style>
