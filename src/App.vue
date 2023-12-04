@@ -33,7 +33,7 @@ export default {
           {
             headers: {
               Accept: "application/json",
-              apiKey: apiKey,
+              apiKey: l769611a1ecd5547a5b6be663d03f3799b,
             },
           },
         );
